@@ -1,44 +1,45 @@
 :root {
-  --font: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
-  --size: 16px;
+	--font: 'Segoe UI Variable Text', 'Segoe UI', system-ui, sans-serif;
+	--size: 16px;
 
-  --bg: #15172c;
-  --ink: #eceaf7;
-  --accent: #e77a22;
-  --gap: 8px;
+	--bg: #15172c;
+	--ink: #eceaf7;
+	--accent: #e77a22;
+	--gap: 8px;
 }
 
-html, body {
-  margin: 0;
-  height: 100%;
-  background: var(--bg);
-  overflow: hidden;
+html,
+body {
+	margin: 0;
+	height: 100%;
+	background: var(--bg);
+	overflow: hidden;
 }
 
 body {
-  font: 400 var(--size)/1.35 var(--font);
-  color: var(--ink);
+	font: 400 var(--size)/1.35 var(--font);
+	color: var(--ink);
 }
 
 #feed {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: var(--gap);
-  padding: var(--gap);
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	gap: var(--gap);
+	padding: var(--gap);
 }
 
 .tab {
-  color: var(--accent);
-  font-size: .85em;
-  font-weight: 700;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+	color: var(--accent);
+	font-size: 0.85em;
+	font-weight: 700;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .body {
-  overflow-wrap: anywhere;
+	overflow-wrap: anywhere;
 }
