@@ -1,17 +1,15 @@
 :root {
-	/* --font: 'Inter', 'Segoe UI Variable Text', 'Segoe UI', system-ui, sans-serif; */
 	--font: "Inter", "Noto Sans Arabic", "Roobert", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	--size: 16px;
 
 	--bg: #15172c;
 	--card: #2b2f5e;
-	--edge: rgba(255, 255, 255, .16);
+	--row: #1e2143;
 	--ink: #eceaf7;
-	--accent: #ffc93c;
+	--accent: #ff7e26;
+	--accent-rgb: 255, 126, 38;
 
-	--gap: 10px;
-	--layers: 3;
-	--step: 9px;
+	--gap: 8px;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -30,8 +28,11 @@ body {
 }
 
 #feed {
-	position: relative;
-	margin: 0 calc(var(--layers) * var(--step)) calc(var(--layers) * var(--step)) 0;
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+	height: 100%;
+	overflow-y: auto;
 }
 
 .body {
@@ -39,17 +40,15 @@ body {
 }
 
 .msg {
-	background: var(--card);
-	border: 1px solid var(--edge);
+	border-radius: 8px;
+	order: var(--depth, 0);
 }
 
 .msg.front {
-	position: relative;
-	z-index: 100;
 	padding: .55em .8em .65em;
+	backgroud: var(--card);
 	border: 3px solid var(--accent);
 	box-shadow: 0 6px 16px rgba(0, 0, 0, .35);
-	/* animation: arrive 0.2s ease-out; */
 }
 
 .msg.front.emphasis {
@@ -57,30 +56,44 @@ body {
 }
 
 .msg:not(.front) {
-	--nudge: 0px;
-	--shift: calc(var(--depth) * var(--step) + var(--nudge));
-	position: absolute;
-	inset: 0;
-	z-index: calc(100 - var(--depth));
-	overflow: hidden;
-	transform: translate(var(--shift), var(--shift));
-	transition: transform 160ms ease-out;
+	display: flex;
+	flex: none;
+	align-items: baseline;
+	gap: .6em;
+	padding: .35em .7em;
+	background: var(--row);
+	border-left: 3px solid var(--user-color, var(--accent));
+	font-size: .85em;
 	cursor: pointer;
-	user-select: none;
+	filter: grayscale(55%) brightness(0.85);
 }
 
-.msg:not(.front):hover { --nudge: 4px; }
-.msg:not(.front) > * { visibility: hidden; }
+.msg:not(.front):hover {
+	background: var(--row-hover);
+	filter: grayscale(30%) brightness(1);
+}
+
+.msg:not(.front) .tab {
+	flex: none;
+	max-width: 45%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.msg:not(.front) .body {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
 
 .tab {
 	margin-bottom: .1em;
-	color: var(--accent);
+	color: var(--user-color, var(--accent));
 	font-size: .85em;
 	font-weight: 700;
-}
-
-@keyframes arrive {
-	from { background-color: rgba(255, 201, 60, .22); }
 }
 
 @keyframes front-flash {
@@ -89,6 +102,6 @@ body {
 	}
 	50% {
 		border-color: #fff3c4;
-		box-shadow: 0 6px 16px rgba(0, 0, 0, .35), 0 0 14px 3px rgba(255, 201, 60, .55);
+		box-shadow: 0 6px 16px rgba(0, 0, 0, .35), 0 0 10px 1px rgba(var(--accent-rgb), .55);
 	}
 }

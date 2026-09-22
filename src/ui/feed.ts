@@ -8,8 +8,7 @@ export interface FeedOptions {
 
 interface Message {
 	readonly element: HTMLElement
-	readonly id: string | undefined
-	readonly username: string | undefined
+	readonly message: ChatMessage | undefined
 	timer: number | undefined
 }
 
@@ -32,12 +31,11 @@ export class Feed {
 	 * Add a simple diagnostic message to the top.
 	 */
 	notice(title: string, text: string): void {
-		const element = this.render(title, text)
+		const element = this.render(title, '', text)
 		this.add(
 			{
 				element: element,
-				id: undefined,
-				username: undefined,
+				message: undefined,
 				timer: undefined,
 			},
 			0
@@ -48,9 +46,13 @@ export class Feed {
 	 * Add new message to the top and flash for `flashIntervalMs`.
 	 */
 	show(msg: ChatMessage): void {
-		const element = this.render(msg.name, msg.text)
+		const element = this.render(msg.name, msg.color, msg.text)
 		this.add(
-			{ element, id: msg.id, username: msg.name, timer: undefined },
+			{
+				element,
+				message: msg,
+				timer: undefined,
+			},
 			this.opts.flashIntervalMs
 		)
 	}
@@ -59,7 +61,7 @@ export class Feed {
 	 * Remove an existing message from the queue.
 	 */
 	remove(msg: ChatMessage): void {
-		const deleted = this.messageQueue.popIf((m) => m.id === msg.id)
+		const deleted = this.messageQueue.popIf((m) => m.message?.id === msg.id)
 		if (deleted) {
 			this.dismiss(deleted)
 		}
@@ -114,10 +116,13 @@ export class Feed {
 		this.elements.delete(msg.element)
 	}
 
-	private render(username: string, text: string): HTMLElement {
+	private render(username: string, color: string, text: string): HTMLElement {
 		const element = document.createElement('div')
 		element.classList.add('msg')
 		element.classList.add('emphasis')
+
+		if (color) element.style.setProperty('--user-color', color)
+
 		const tab = document.createElement('div')
 		tab.className = 'tab'
 		tab.textContent = username

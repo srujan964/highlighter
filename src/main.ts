@@ -29,11 +29,36 @@ function requireElement(id: string): HTMLElement {
 }
 
 function demo(feed: Feed) {
-	feed.show({ id: 'msg-id-1', name: 'john', text: 'VoHiYo' })
-	feed.show({ id: 'msg-id-2', name: 'jane', text: 'Kappa' })
-	feed.show({ id: 'msg-id-3', name: 'alice', text: 'HeyGuys' })
-	feed.show({ id: 'msg-id-4', name: 'bob', text: 'MrDestructoid' })
-	feed.show({ id: 'msg-id-5', name: 'charlie', text: 'PersonalBest' })
-	feed.show({ id: 'msg-id-6', name: 'enid', text: 'FallDamage' })
-	feed.show({ id: 'msg-id-7', name: 'fred', text: 'GriddyGoose' })
+	feed.show({ id: 'msg-id-1', name: 'john', color: '#9857d4', text: 'VoHiYo' })
+	feed.show({ id: 'msg-id-2', name: 'jane', color: '#9857d4', text: 'Kappa' })
+	feed.show({
+		id: 'msg-id-3',
+		name: 'alice',
+		color: '#9857d4',
+		text: 'HeyGuys',
+	})
+	feed.show({
+		id: 'msg-id-4',
+		name: 'bob',
+		color: '#9857d4',
+		text: 'MrDestructoid',
+	})
+	feed.show({
+		id: 'msg-id-5',
+		name: 'charlie',
+		color: '#9857d4',
+		text: 'PersonalBest',
+	})
+	feed.show({
+		id: 'msg-id-6',
+		name: 'enid',
+		color: '#9857d4',
+		text: 'FallDamage',
+	})
+	feed.show({
+		id: 'msg-id-7',
+		name: 'fred',
+		color: '#9857d4',
+		text: 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet consectetur adipiscing elit quisque faucibus ex. Adipiscing elit quisque faucibus ex sapien vitae pellentesque.',
+	})
 }

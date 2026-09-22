@@ -23,7 +23,7 @@ describe('basic feed operations', () => {
 			flashIntervalMs: 10000,
 		})
 
-		feed.show({ id: 'msg-id', name: 'john', text: 'VoHiYo' })
+		feed.show({ id: 'msg-id', name: 'john', color: '#9857d4', text: 'VoHiYo' })
 
 		expect(root.querySelector('.tab')?.textContent).toBe('john')
 		expect(root.querySelector('.body')?.textContent).toBe('VoHiYo')
@@ -35,10 +35,20 @@ describe('basic feed operations', () => {
 			flashIntervalMs: 10000,
 		})
 
-		feed.show({ id: 'msg-id-1', name: 'john', text: 'VoHiYo' })
-		feed.show({ id: 'msg-id-2', name: 'jane', text: 'Kappa' })
+		feed.show({
+			id: 'msg-id-1',
+			name: 'john',
+			color: '#9857d4',
+			text: 'VoHiYo',
+		})
+		feed.show({ id: 'msg-id-2', name: 'jane', color: '#9857d4', text: 'Kappa' })
 
-		feed.remove({ id: 'msg-id-1', name: 'john', text: 'VoHiYo' })
+		feed.remove({
+			id: 'msg-id-1',
+			name: 'john',
+			color: '#9857d4',
+			text: 'VoHiYo',
+		})
 
 		const messages = [...deck()]
 		expect(
@@ -52,13 +62,43 @@ describe('basic feed operations', () => {
 			flashIntervalMs: 10000,
 		})
 
-		feed.show({ id: 'msg-id-1', name: 'john', text: 'VoHiYo' })
-		feed.show({ id: 'msg-id-2', name: 'jane', text: 'Kappa' })
-		feed.show({ id: 'msg-id-3', name: 'alice', text: 'HeyGuys' })
-		feed.show({ id: 'msg-id-4', name: 'bob', text: 'MrDestructoid' })
-		feed.show({ id: 'msg-id-5', name: 'charlie', text: 'PersonalBest' })
-		feed.show({ id: 'msg-id-6', name: 'enid', text: 'FallDamage' })
-		feed.show({ id: 'msg-id-7', name: 'fred', text: 'GriddyGoose' })
+		feed.show({
+			id: 'msg-id-1',
+			name: 'john',
+			color: '#9857d4',
+			text: 'VoHiYo',
+		})
+		feed.show({ id: 'msg-id-2', name: 'jane', color: '#9857d4', text: 'Kappa' })
+		feed.show({
+			id: 'msg-id-3',
+			name: 'alice',
+			color: '#9857d4',
+			text: 'HeyGuys',
+		})
+		feed.show({
+			id: 'msg-id-4',
+			name: 'bob',
+			color: '#9857d4',
+			text: 'MrDestructoid',
+		})
+		feed.show({
+			id: 'msg-id-5',
+			name: 'charlie',
+			color: '#9857d4',
+			text: 'PersonalBest',
+		})
+		feed.show({
+			id: 'msg-id-6',
+			name: 'enid',
+			color: '#9857d4',
+			text: 'FallDamage',
+		})
+		feed.show({
+			id: 'msg-id-7',
+			name: 'fred',
+			color: '#9857d4',
+			text: 'GriddyGoose',
+		})
 
 		const msgElements = root.querySelectorAll<HTMLElement>('.msg')
 		const users = [...msgElements]
@@ -74,10 +114,25 @@ describe('basic feed operations', () => {
 			flashIntervalMs: 10000,
 		})
 
-		feed.show({ id: 'msg-id-1', name: 'john', text: 'VoHiYo' })
-		feed.show({ id: 'msg-id-2', name: 'jane', text: 'Kappa' })
-		feed.show({ id: 'msg-id-3', name: 'alice', text: 'HeyGuys' })
-		feed.show({ id: 'msg-id-4', name: 'bob', text: 'MrDestructoid' })
+		feed.show({
+			id: 'msg-id-1',
+			name: 'john',
+			color: '#9857d4',
+			text: 'VoHiYo',
+		})
+		feed.show({ id: 'msg-id-2', name: 'jane', color: '#9857d4', text: 'Kappa' })
+		feed.show({
+			id: 'msg-id-3',
+			name: 'alice',
+			color: '#9857d4',
+			text: 'HeyGuys',
+		})
+		feed.show({
+			id: 'msg-id-4',
+			name: 'bob',
+			color: '#9857d4',
+			text: 'MrDestructoid',
+		})
 
 		const messages = [...deck()]
 		const penultimateEntry = messages.find((e) => textOf(e) === 'Kappa')
