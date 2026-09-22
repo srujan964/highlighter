@@ -16,12 +16,16 @@ interface Message {
 export class Feed {
 	private root: HTMLElement
 	private opts: FeedOptions
-	private messages: Deque<Message>
+	private messageQueue: Deque<Message>
+	private elements: WeakMap<Element, Message>
 
 	constructor(root: HTMLElement, opts: FeedOptions) {
 		this.root = root
 		this.opts = opts
-		this.messages = new Deque()
+		this.messageQueue = new Deque()
+		this.elements = new WeakMap()
+
+		root.addEventListener('click', (e) => this.onClick(e))
 	}
 
 	/**
@@ -55,51 +59,68 @@ export class Feed {
 	 * Remove an existing message from the queue.
 	 */
 	remove(msg: ChatMessage): void {
-		const deleted = this.messages.popIf((m) => m.id === msg.id)
+		const deleted = this.messageQueue.popIf((m) => m.id === msg.id)
 		if (deleted) {
 			this.dismiss(deleted)
 		}
 	}
 
+	private onClick(e: MouseEvent): void {
+		if (!(e.target instanceof Element)) return
+		const element = e.target.closest('.msg')
+		const entry = element ? this.elements.get(element) : undefined
+		if (entry) this.bringToFront(entry)
+	}
+
+	private bringToFront(entry: Message): void {
+		if (!this.messageQueue.moveToFront(entry)) return
+		window.clearTimeout(entry.timer)
+		entry.timer = undefined
+		this.layout()
+	}
+
 	private add(entry: Message, fadeAfter: number): void {
-		this.messages.pushFront(entry)
+		this.elements.set(entry.element, entry)
+		this.messageQueue.pushFront(entry)
 		this.root.append(entry.element)
 		if (fadeAfter > 0) {
 			entry.timer = setTimeout(() => {
-				this.stopEmphasis(entry)
+				this.deemphasize(entry)
 			}, fadeAfter)
 		}
 
-		if (this.messages.size() > this.opts.maxMessages) {
-			const oldest = this.messages.popBack()!
+		if (this.messageQueue.size() > this.opts.maxMessages) {
+			const oldest = this.messageQueue.popBack()!
 			this.dismiss(oldest)
 			this.layout()
 		}
 	}
 
 	private layout(): void {
-		;[...this.messages].forEach((msg: Message, depth: number) => {
+		;[...this.messageQueue].forEach((msg: Message, depth: number) => {
 			msg.element.classList.toggle('front', depth === 0)
 			msg.element.style.setProperty('--depth', String(depth))
 		})
 	}
 
 	// Remove the strobe/flash styling on the message
-	private stopEmphasis(msg: Message): void {
-		msg.element.classList.remove('.emphasis')
+	private deemphasize(msg: Message): void {
+		msg.element.classList.remove('emphasis')
 	}
 
 	private dismiss(msg: Message): void {
 		window.clearTimeout(msg.timer)
 		msg.element.remove()
+		this.elements.delete(msg.element)
 	}
 
-	private render(name: string, text: string): HTMLElement {
+	private render(username: string, text: string): HTMLElement {
 		const element = document.createElement('div')
-		element.className = 'msg'
+		element.classList.add('msg')
+		element.classList.add('emphasis')
 		const tab = document.createElement('div')
 		tab.className = 'tab'
-		tab.textContent = name
+		tab.textContent = username
 
 		const body = document.createElement('div')
 		body.className = 'body'

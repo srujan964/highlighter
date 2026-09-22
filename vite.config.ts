@@ -7,5 +7,6 @@ export default defineConfig({
 	build: { modulePreload: { polyfill: false } },
 	test: {
 		environment: 'happy-dom',
+		reporters: ['tree'],
 	},
 })

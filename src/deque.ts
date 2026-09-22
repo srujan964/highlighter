@@ -20,6 +20,7 @@ export class Deque<T> {
 	pushBack(item: T): void {
 		this.array.push(item)
 	}
+
 	popFront(): T | undefined {
 		if (this.array.length === 0) return undefined
 		const deleted = this.array.splice(0, 1)

@@ -35,4 +35,17 @@ describe('Deque tests', () => {
 
 		expect([...q]).toStrictEqual([4, 3, 2, 1])
 	})
+
+	it('should move selected element to the front', () => {
+		const q = new Deque()
+
+		q.pushFront(1)
+		q.pushFront(2)
+		q.pushFront(3)
+		q.pushFront(4)
+
+		q.moveToFront(2)
+
+		expect([...q]).toStrictEqual([2, 4, 3, 1])
+	})
 })

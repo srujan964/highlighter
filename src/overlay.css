@@ -1,15 +1,22 @@
 :root {
-	--font: 'Segoe UI Variable Text', 'Segoe UI', system-ui, sans-serif;
+	/* --font: 'Inter', 'Segoe UI Variable Text', 'Segoe UI', system-ui, sans-serif; */
+	--font: "Inter", "Noto Sans Arabic", "Roobert", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	--size: 16px;
 
 	--bg: #15172c;
+	--card: #2b2f5e;
+	--edge: rgba(255, 255, 255, .16);
 	--ink: #eceaf7;
-	--accent: #e77a22;
-	--gap: 8px;
+	--accent: #ffc93c;
+
+	--gap: 10px;
+	--layers: 3;
+	--step: 9px;
 }
 
-html,
-body {
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
 	margin: 0;
 	height: 100%;
 	background: var(--bg);
@@ -17,29 +24,71 @@ body {
 }
 
 body {
+	padding: var(--gap);
 	font: 400 var(--size)/1.35 var(--font);
 	color: var(--ink);
 }
 
 #feed {
-	position: absolute;
-	inset: 0;
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-end;
-	gap: var(--gap);
-	padding: var(--gap);
-}
-
-.tab {
-	color: var(--accent);
-	font-size: 0.85em;
-	font-weight: 700;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	position: relative;
+	margin: 0 calc(var(--layers) * var(--step)) calc(var(--layers) * var(--step)) 0;
 }
 
 .body {
 	overflow-wrap: anywhere;
+}
+
+.msg {
+	background: var(--card);
+	border: 1px solid var(--edge);
+}
+
+.msg.front {
+	position: relative;
+	z-index: 100;
+	padding: .55em .8em .65em;
+	border: 3px solid var(--accent);
+	box-shadow: 0 6px 16px rgba(0, 0, 0, .35);
+	/* animation: arrive 0.2s ease-out; */
+}
+
+.msg.front.emphasis {
+	animation: front-flash 450ms ease-in-out infinite;
+}
+
+.msg:not(.front) {
+	--nudge: 0px;
+	--shift: calc(var(--depth) * var(--step) + var(--nudge));
+	position: absolute;
+	inset: 0;
+	z-index: calc(100 - var(--depth));
+	overflow: hidden;
+	transform: translate(var(--shift), var(--shift));
+	transition: transform 160ms ease-out;
+	cursor: pointer;
+	user-select: none;
+}
+
+.msg:not(.front):hover { --nudge: 4px; }
+.msg:not(.front) > * { visibility: hidden; }
+
+.tab {
+	margin-bottom: .1em;
+	color: var(--accent);
+	font-size: .85em;
+	font-weight: 700;
+}
+
+@keyframes arrive {
+	from { background-color: rgba(255, 201, 60, .22); }
+}
+
+@keyframes front-flash {
+	0%, 100% {
+		box-shadow: 0 6px 16px rgba(0, 0, 0, .35);
+	}
+	50% {
+		border-color: #fff3c4;
+		box-shadow: 0 6px 16px rgba(0, 0, 0, .35), 0 0 14px 3px rgba(255, 201, 60, .55);
+	}
 }
