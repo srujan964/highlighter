@@ -10,19 +10,18 @@ import {
 	toChatMessage,
 } from './utils'
 import { demo } from './demo'
+import type { Config } from './types'
 
 const FLASH_INTERVAL_MS: number = 4500
-const MAX_MESSAGES: number = 5
 
-const config = readConfig(document.location.toString())
-
+const config: Config = readConfig(document.location.toString())
 const rootStyle = document.documentElement.style
 rootStyle.setProperty('--size', `${config.size}px`)
 
 const feed = new Feed(requireElement('feed'), {
 	hideAfterMs: config.hideAfter * 60 * 1000,
-	flashIntervalMs: FLASH_INTERVAL_MS,
-	maxMessages: MAX_MESSAGES,
+	flashIntervalMs: config.interval ?? FLASH_INTERVAL_MS,
+	maxMessages: config.feedSize,
 })
 const statusLine = new Status(requireElement('status'))
 

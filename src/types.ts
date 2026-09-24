@@ -1,5 +1,6 @@
 export interface Config {
 	channel: string | null
+	feedSize: number
 	size: number
 	interval: number
 	hideAfter: number

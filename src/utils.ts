@@ -4,6 +4,7 @@ import type { ChatMessage, Config, IRCMessage } from './types'
 const DEFAULT_FONT_SIZE = 14
 const DEFAULT_INTERVAL = 4500
 const DEFAULT_HIDE_AFTER = 10
+const DEFAULT_MAX_MSGS = 5
 
 const TAG_MOD = 'mod'
 const TAG_MSG_TIMESTAMP = 'tmi-sent-ts'
@@ -18,8 +19,9 @@ export function readConfig(url: string): Config {
 	const interval: number = Number(params.get('interval')) ?? DEFAULT_INTERVAL
 	const hideAfter: number =
 		Number(params.get('hideAfter')) ?? DEFAULT_HIDE_AFTER
+	const feedSize: number = Number(params.get('feedSize')) ?? DEFAULT_MAX_MSGS
 	const isDemo: boolean = params.get('demo') === 'true'
-	return { channel, size, interval, hideAfter, isDemo }
+	return { channel, size, feedSize, interval, hideAfter, isDemo }
 }
 
 export function toChatMessage(msg: IRCMessage): ChatMessage {
