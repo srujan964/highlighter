@@ -59,13 +59,10 @@ describe('basic feed operations', () => {
 			timestamp: ts,
 		})
 
-		feed.remove({
-			id: 'msg-id-1',
-			name: 'john',
-			color: '#9857d4',
-			text: 'VoHiYo',
-			timestamp: ts,
-		})
+
+		feed.remove(
+			'msg-id-1',
+		)
 
 		const messages = [...deck()]
 		expect(

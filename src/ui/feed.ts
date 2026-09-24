@@ -20,10 +20,7 @@ export class Feed {
 	private messageQueue: Deque<Message>
 	private elements: WeakMap<Element, Message>
 
-	constructor(
-		root: HTMLElement,
-		opts: FeedOptions
-	) {
+	constructor(root: HTMLElement, opts: FeedOptions) {
 		this.root = root
 		this.opts = opts
 		this.messageQueue = new Deque()
@@ -67,8 +64,8 @@ export class Feed {
 	/**
 	 * Remove an existing message from the queue.
 	 */
-	remove(msg: ChatMessage): void {
-		const deleted = this.messageQueue.popIf((m) => m.message?.id === msg.id)
+	remove(id: string): void {
+		const deleted = this.messageQueue.popIf((m) => m.message?.id === id)
 		if (deleted) {
 			this.dismiss(deleted)
 		}

@@ -55,6 +55,10 @@ export function filterAndProcess(msg: ChatMessage): ChatMessage | null {
 	return null
 }
 
+export function extractTargetMsgId(deleteMessage: IRCMessage): string {
+	return deleteMessage.tags['target-msg-id'] ?? null
+}
+
 function parseTimestamp(raw: string | null): number {
 	const value = raw === undefined ? NaN : Number(raw)
 	return Number.isFinite(value) ? value : Date.now()

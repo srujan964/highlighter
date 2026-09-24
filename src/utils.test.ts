@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { filterAndProcess, readConfig, FILTER_TERMS } from './utils'
-import type { ChatMessage, Config } from './types'
+import {
+	filterAndProcess,
+	readConfig,
+	FILTER_TERMS,
+	extractTargetMsgId,
+} from './utils'
+import type { ChatMessage, Config, IRCMessage } from './types'
 
 describe('utils', () => {
 	it('should read config from url', () => {
@@ -52,4 +57,30 @@ describe('utils', () => {
 			expect(filterAndProcess(msg)).toBe(null)
 		}
 	)
+
+	it('should return the target msg id from a CLEARMSG message', () => {
+		const message: IRCMessage = {
+			tags: {
+				'target-msg-id': 'target-id',
+			},
+			source: 'tmi.twitch.tv',
+			command: 'CLEARMSG',
+			params: [],
+			trailing: '',
+		}
+
+		expect(extractTargetMsgId(message)).toBe('target-id')
+	})
+
+	it('should return null if the message has no target msg id', () => {
+		const message: IRCMessage = {
+			tags: {},
+			source: 'tmi.twitch.tv',
+			command: 'CLEARMSG',
+			params: [],
+			trailing: '',
+		}
+
+		expect(extractTargetMsgId(message)).toBeNull()
+	})
 })

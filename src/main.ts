@@ -3,6 +3,7 @@ import { TwitchIRCClient } from './twitch/client'
 import { Status } from './ui/status'
 import { Feed } from './ui/feed'
 import {
+	extractTargetMsgId,
 	filterAndProcess,
 	isFromModerator,
 	readConfig,
@@ -44,8 +45,12 @@ function listen(channel: string, feed: Feed, statusline: Status): void {
 		onEvent: (msg) => {
 			switch (msg.command) {
 				case 'PRIVMSG':
-					const message = filterAndProcess(toChatMessage(msg))
-					if (message) feed.show(message)
+					const msgToHighlight = filterAndProcess(toChatMessage(msg))
+					if (msgToHighlight) feed.show(msgToHighlight)
+					break
+				case 'CLEARMSG':
+					const msgIdToDelete = extractTargetMsgId(msg)
+					if (msgIdToDelete) feed.remove(msgIdToDelete)
 					break
 				default:
 					console.log(`Prefiltered message lost from switch - ${msg.source}`)
