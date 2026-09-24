@@ -8,5 +8,6 @@ export default defineConfig({
 	test: {
 		environment: 'happy-dom',
 		reporters: ['tree'],
+		silent: 'passed-only',
 	},
 })

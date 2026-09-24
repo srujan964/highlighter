@@ -1,13 +1,25 @@
-export type Config = {
+export interface Config {
+	channel: string | null
 	size: number
 	interval: number
-	layers: string
+	hideAfter: number
 	isDemo: boolean
 }
 
-export type ChatMessage = {
-	id: string
+export interface ChatMessage {
+	id?: string
 	name: string
 	color: string
 	text: string
+	timestamp: number
+}
+
+export type Tag = Readonly<Record<string, string>>
+
+export interface IRCMessage {
+	tags: Tag
+	source: string
+	command: string
+	params: string[]
+	trailing: string | null
 }
