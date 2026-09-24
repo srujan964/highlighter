@@ -9,6 +9,8 @@ const TAG_MOD = 'mod'
 const TAG_MSG_TIMESTAMP = 'tmi-sent-ts'
 const TAG_VALUE_TRUE = '1'
 
+export const FILTER_TERMS = ['!ht', '!highlight', 'ht:']
+
 export function readConfig(url: string): Config {
 	const params = new URL(url).searchParams
 	const channel = params.get('channel')
@@ -39,6 +41,18 @@ export function formatTime(unixTm: number): string {
 		hour: '2-digit',
 		minute: '2-digit',
 	}).format(new Date(unixTm))
+}
+
+export function filterAndProcess(msg: ChatMessage): ChatMessage | null {
+	for (const term of FILTER_TERMS) {
+		if (!term) continue
+		if (msg.text.startsWith(term) && term !== msg.text)
+			return {
+				...msg,
+				text: msg.text.replace(term, ''),
+			}
+	}
+	return null
 }
 
 function parseTimestamp(raw: string | null): number {

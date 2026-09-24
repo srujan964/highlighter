@@ -1,9 +1,14 @@
-import { demo } from './demo'
 import './overlay.css'
 import { TwitchIRCClient } from './twitch/client'
-
+import { Status } from './ui/status'
 import { Feed } from './ui/feed'
-import { isFromModerator, readConfig, toChatMessage } from './utils'
+import {
+	filterAndProcess,
+	isFromModerator,
+	readConfig,
+	toChatMessage,
+} from './utils'
+import { demo } from './demo'
 
 const FLASH_INTERVAL_MS: number = 4500
 const MAX_MESSAGES: number = 5
@@ -13,16 +18,17 @@ const config = readConfig(document.location.toString())
 const rootStyle = document.documentElement.style
 rootStyle.setProperty('--size', `${config.size}px`)
 
-const feed = new Feed(requireElement('feed'), requireElement('status'), {
+const feed = new Feed(requireElement('feed'), {
 	hideAfterMs: config.hideAfter * 60 * 1000,
 	flashIntervalMs: FLASH_INTERVAL_MS,
 	maxMessages: MAX_MESSAGES,
 })
+const statusLine = new Status(requireElement('status'))
 
 if (config.isDemo) {
 	demo(feed)
 } else if (config.channel) {
-	listen(config.channel, feed)
+	listen(config.channel, feed, statusLine)
 } else {
 	feed.notice(
 		'Setup required',
@@ -30,16 +36,19 @@ if (config.isDemo) {
 	)
 }
 
-function listen(channel: string, feed: Feed): void {
+function listen(channel: string, feed: Feed, statusline: Status): void {
 	const client = new TwitchIRCClient({
 		channel,
 		prefilter: (line) => isFromModerator(line),
-		onStatus: (text) => feed.displayStatus(text),
+		onStatus: (text) => statusline.displayStatus(text),
 		onEvent: (msg) => {
 			switch (msg.command) {
 				case 'PRIVMSG':
-					feed.show(toChatMessage(msg))
+					const message = filterAndProcess(toChatMessage(msg))
+					if (message) feed.show(message)
 					break
+				default:
+					console.log(`Prefiltered message lost from switch - ${msg.source}`)
 			}
 		},
 	})

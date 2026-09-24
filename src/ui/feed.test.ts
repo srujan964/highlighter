@@ -2,13 +2,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Feed } from './feed'
 
 let root: HTMLElement
-let status: HTMLElement
 
 beforeEach(() => {
 	vi.useFakeTimers()
 	document.body.innerHTML = '<div id="feed"></div><div id="status"></div>'
 	root = document.getElementById('feed')!
-	status = document.getElementById('status')!
 })
 afterEach(() => vi.useRealTimers())
 
@@ -21,7 +19,7 @@ const sorted = () =>
 describe('basic feed operations', () => {
 	const ts = Date.now()
 	it('should add message to the top', () => {
-		const feed = new Feed(root, status, {
+		const feed = new Feed(root, {
 			maxMessages: 5,
 			hideAfterMs: 10000,
 			flashIntervalMs: 10000,
@@ -40,7 +38,7 @@ describe('basic feed operations', () => {
 	})
 
 	it('should remove existing message from the back', () => {
-		const feed = new Feed(root, status, {
+		const feed = new Feed(root, {
 			maxMessages: 5,
 			hideAfterMs: 10000,
 			flashIntervalMs: 10000,
@@ -76,7 +74,7 @@ describe('basic feed operations', () => {
 	})
 
 	it(`should preserve no more than 'maxMessages' message entries`, () => {
-		const feed = new Feed(root, status, {
+		const feed = new Feed(root, {
 			maxMessages: 5,
 			hideAfterMs: 10000,
 			flashIntervalMs: 10000,
@@ -141,7 +139,7 @@ describe('basic feed operations', () => {
 	})
 
 	it('should move card to the front if clicked on', () => {
-		const feed = new Feed(root, status, {
+		const feed = new Feed(root, {
 			maxMessages: 5,
 			hideAfterMs: 10000,
 			flashIntervalMs: 10000,

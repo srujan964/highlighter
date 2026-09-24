@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { readConfig } from './utils'
-import type { Config } from './types'
+import { filterAndProcess, readConfig, FILTER_TERMS } from './utils'
+import type { ChatMessage, Config } from './types'
 
 describe('utils', () => {
 	it('should read config from url', () => {
@@ -16,4 +16,40 @@ describe('utils', () => {
 		expect(config.hideAfter).toBe(5)
 		expect(config.isDemo).toBe(false)
 	})
+
+	it.for(FILTER_TERMS)(
+		'should filter messages containing filter terms and strip them',
+		(term) => {
+			const text = `${term} VoHiYo`
+			const msg: ChatMessage = {
+				name: 'john',
+				color: '#aaaaaa',
+				text: text,
+				timestamp: 0,
+			}
+
+			const strippedText = text.replace(term, '')
+
+			expect(filterAndProcess(msg)).toMatchObject({
+				name: 'john',
+				color: '#aaaaaa',
+				text: strippedText,
+				timestamp: 0,
+			})
+		}
+	)
+
+	it.for(FILTER_TERMS)(
+		'should filter out messages that contain only filter terms',
+		(term) => {
+			const msg: ChatMessage = {
+				name: 'john',
+				color: '#aaaaaa',
+				text: `${term}`,
+				timestamp: 0,
+			}
+
+			expect(filterAndProcess(msg)).toBe(null)
+		}
+	)
 })

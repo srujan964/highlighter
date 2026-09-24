@@ -107,7 +107,7 @@ describe('IRC client connection handling', () => {
 		const { sock } = start()
 
 		expect(sock.sent).toEqual([
-			'CAP REQ twitch.tv/tags twitch.tv/commands',
+			'CAP REQ :twitch.tv/tags twitch.tv/commands',
 			'PASS deadbeef',
 			expect.stringMatching(/^NICK justinfan\d+$/),
 			'JOIN #testchannel',

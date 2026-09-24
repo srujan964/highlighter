@@ -8,6 +8,7 @@
 	--ink: #eceaf7;
 	--accent: #ff7e26;
 	--accent-rgb: 255, 126, 38;
+	--status: #09bc8a;
 
 	--gap: 8px;
 }
@@ -135,7 +136,8 @@ body {
 	right: var(--gap);
 	bottom: var(--gap);
 	padding: .4em .7em;
-	border-radius: 8px;
+	border-radius: 6px;
+	border: 3px solid var(--status, var(--accent));
 	background: var(--row);
 	font: 12px/1.2 var(--font);
 	color: var(--ink);

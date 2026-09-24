@@ -16,18 +16,15 @@ interface Message {
 
 export class Feed {
 	private root: HTMLElement
-	private status: HTMLElement | null
 	private opts: FeedOptions
 	private messageQueue: Deque<Message>
 	private elements: WeakMap<Element, Message>
 
 	constructor(
 		root: HTMLElement,
-		statusElement: HTMLElement | null,
 		opts: FeedOptions
 	) {
 		this.root = root
-		this.status = statusElement
 		this.opts = opts
 		this.messageQueue = new Deque()
 		this.elements = new WeakMap()
@@ -65,20 +62,6 @@ export class Feed {
 			this.opts.flashIntervalMs,
 			this.opts.hideAfterMs
 		)
-	}
-
-
-	/**
-	 * Display a temporary toast message in the feed.
-	 */
-	displayStatus(text: string): void {
-		if (!this.status) return
-
-		this.status.textContent = text
-
-		this.status.classList.remove('visible')
-		void this.status.offsetWidth
-		this.status.classList.add('visible')
 	}
 
 	/**
@@ -124,8 +107,9 @@ export class Feed {
 		if (this.messageQueue.size() > this.opts.maxMessages) {
 			const oldest = this.messageQueue.popBack()!
 			this.dismiss(oldest)
-			this.layout()
 		}
+
+		this.layout()
 	}
 
 	private layout(): void {

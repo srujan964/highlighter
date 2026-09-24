@@ -1,4 +1,4 @@
-import type { IRCMessage } from '../types';
+import type { IRCMessage } from '../types'
 import { command, parseIRC } from './parser'
 
 const IRC_URL: string = 'wss://irc-ws.chat.twitch.tv:443'
@@ -80,7 +80,7 @@ export class TwitchIRCClient {
 
 		sock.onopen = () => {
 			this.openedAt = Date.now()
-			sock.send('CAP REQ twitch.tv/tags twitch.tv/commands')
+			sock.send('CAP REQ :twitch.tv/tags twitch.tv/commands')
 			sock.send('PASS deadbeef')
 			sock.send(`NICK ${this.nickname}`)
 			sock.send(`JOIN #${this.opts.channel}`)
@@ -119,6 +119,7 @@ export class TwitchIRCClient {
 	}
 
 	private onLine(line: string): void {
+		console.log(`Received line - ${line}`)
 		if (command(line) === 'PRIVMSG' && !this.opts.prefilter(line)) {
 			return
 		}
@@ -173,7 +174,6 @@ export class TwitchIRCClient {
 		if (this.openedAt > 0 && Date.now() - this.openedAt > SILENCE_MS)
 			this.retries = 0
 
-		console.log(`Current retry: ${this.retries}`)
 		const delay = Math.min(MAX_BACKOFF_MS, 2 ** this.retries * BASE_BACKOFF_MS)
 		this.retries++
 		this.notify(`Disconnected. Retrying in ${Math.round(delay / 1000)}s...`)
