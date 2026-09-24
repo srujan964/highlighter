@@ -119,7 +119,6 @@ export class TwitchIRCClient {
 	}
 
 	private onLine(line: string): void {
-		console.log(`Received line - ${line}`)
 		if (command(line) === 'PRIVMSG' && !this.opts.prefilter(line)) {
 			return
 		}
