@@ -48,7 +48,7 @@ export function formatTime(unixTm: number): string {
 export function filterAndProcess(msg: ChatMessage): ChatMessage | null {
 	for (const term of FILTER_TERMS) {
 		if (!term) continue
-		if (msg.text.startsWith(term) && term !== msg.text)
+		if (term !== msg.text && msg.text.startsWith(term))
 			return {
 				...msg,
 				text: msg.text.replace(term, ''),
