@@ -11,6 +11,7 @@ export interface FeedOptions {
 interface Message {
 	readonly element: HTMLElement
 	readonly message: ChatMessage | undefined
+	readonly hideAfterMs: number | undefined
 	evictTimer: number | undefined
 }
 
@@ -38,10 +39,10 @@ export class Feed {
 			{
 				element: element,
 				message: undefined,
+				hideAfterMs: undefined,
 				evictTimer: undefined,
 			},
 			0,
-			0
 		)
 	}
 
@@ -54,10 +55,10 @@ export class Feed {
 			{
 				element,
 				message: msg,
+				hideAfterMs: this.opts.hideAfterMs,
 				evictTimer: undefined,
 			},
-			this.opts.flashIntervalMs,
-			this.opts.hideAfterMs
+			this.opts.flashIntervalMs
 		)
 	}
 
@@ -80,12 +81,17 @@ export class Feed {
 
 	private bringToFront(entry: Message): void {
 		if (!this.messageQueue.moveToFront(entry)) return
-		window.clearTimeout(entry.evictTimer)
-		entry.evictTimer = undefined
+
+		if (entry.hideAfterMs && entry.hideAfterMs > 0) {
+			window.clearTimeout(entry.evictTimer)
+			entry.evictTimer = setTimeout(() => {
+				this.dismiss(entry)
+			}, entry.hideAfterMs)
+		}
 		this.layout()
 	}
 
-	private add(entry: Message, fadeAfter: number, evictAfter: number): void {
+	private add(entry: Message, fadeAfter: number): void {
 		this.elements.set(entry.element, entry)
 		this.messageQueue.pushFront(entry)
 		this.root.append(entry.element)
@@ -95,10 +101,10 @@ export class Feed {
 			}, fadeAfter)
 		}
 
-		if (evictAfter > 0) {
+		if (entry.hideAfterMs && entry.hideAfterMs > 0) {
 			entry.evictTimer = setTimeout(() => {
 				this.dismiss(entry)
-			}, evictAfter)
+			}, entry.hideAfterMs)
 		}
 
 		if (this.messageQueue.size() > this.opts.maxMessages) {
