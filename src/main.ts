@@ -14,7 +14,18 @@ import type { Config } from './types'
 
 const FLASH_INTERVAL_MS: number = 4500
 
-const config: Config = readConfig(document.location.toString())
+const config: Config =
+	window.location.protocol === 'file:'
+		? {
+				channel: import.meta.env.VITE_CHANNEL,
+				feedSize: Number(import.meta.env.VITE_FEED_SIZE),
+				size: Number(import.meta.env.VITE_FONT_SIZE),
+				interval: Number(import.meta.env.VITE_INTERVAL_MS),
+				hideAfter: Number(import.meta.env.VITE_HIDE_AFTER),
+				isDemo: import.meta.env.VITE_DEMO_ENABLED === 'true',
+			}
+		: readConfig(document.location.toString())
+
 const rootStyle = document.documentElement.style
 rootStyle.setProperty('--size', `${config.size}px`)
 
