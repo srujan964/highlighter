@@ -40,6 +40,10 @@ body {
 	overflow-wrap: anywhere;
 }
 
+.body a {
+	color: #66b3ff;
+}
+
 .msg {
 	order: var(--depth, 0);
 }

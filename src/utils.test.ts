@@ -4,6 +4,7 @@ import {
 	readConfig,
 	FILTER_TERMS,
 	extractTargetMsgId,
+	isLink,
 } from './utils'
 import type { ChatMessage, Config, IRCMessage } from './types'
 
@@ -82,5 +83,49 @@ describe('utils', () => {
 		}
 
 		expect(extractTargetMsgId(message)).toBeNull()
+	})
+})
+
+describe('link parsing helper', () => {
+	it('should correctly identify link text', () => {
+		const text = 'https://www.example.com'
+
+		expect(isLink(text)).toBe(true)
+	})
+
+	it('should correctly identify text that is not a link', () => {
+		const text = 'https example com'
+
+		expect(isLink(text)).toBe(false)
+	})
+
+	it('should disallow http only links', () => {
+		const text = 'http://www.example.com'
+
+		expect(isLink(text)).toBe(false)
+	})
+
+	it('should disallow text that only has a protocol but no actual URL', () => {
+		const text = 'https://'
+
+		expect(isLink(text)).toBe(false)
+	})
+
+	it('should allow URLs without a protocol defined', () => {
+		const text = 'www.example.com'
+
+		expect(isLink(text)).toBe(true)
+	})
+
+	it('should disallow link text with only a trailing period', () => {
+		const text = 'example.'
+
+		expect(isLink(text)).toBe(false)
+	})
+
+	it('should allow links with query params and class IDs', () => {
+		const text = 'example.com/foo?id=100#text'
+
+		expect(isLink(text)).toBe(true)
 	})
 })

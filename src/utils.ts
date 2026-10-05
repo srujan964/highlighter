@@ -61,6 +61,26 @@ export function extractTargetMsgId(deleteMessage: IRCMessage): string {
 	return deleteMessage.tags['target-msg-id'] ?? null
 }
 
+const isHttps: (text: string) => boolean = (text) => /^https:\/\//i.test(text)
+
+export function isLink(text: string): boolean {
+	const hasProtocol = /^[a-z][a-z\d+.-]*:\/\//i.test(text)
+	if (hasProtocol && !isHttps(text)) return false
+
+	try {
+		const url = new URL(normalizeLink(text))
+		const parts = url.hostname.split('.')
+
+		return url.protocol === 'https:' && parts.length >= 2 && parts.every(part => part.length > 0)
+	} catch {
+		return false
+	}
+}
+
+export function normalizeLink(link: string) {
+	return isHttps(link) ? link : `https://${link}`
+}
+
 function parseTimestamp(raw: string | null): number {
 	const value = raw === undefined ? NaN : Number(raw)
 	return Number.isFinite(value) ? value : Date.now()

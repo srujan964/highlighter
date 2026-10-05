@@ -29,12 +29,15 @@ describe('basic feed operations', () => {
 			id: 'msg-id',
 			name: 'john',
 			color: '#9857d4',
-			text: 'VoHiYo',
+			text: 'VoHiYo https://www.example.com',
 			timestamp: ts,
 		})
 
 		expect(root.querySelector('.tab')?.textContent).toBe('john')
-		expect(root.querySelector('.body')?.textContent).toBe('VoHiYo')
+		expect(root.querySelector('.body')?.textContent).toBe(
+			'VoHiYo https://www.example.com'
+		)
+		expect(root.querySelector('.time')).toBeTruthy()
 	})
 
 	it('should remove existing message from the back', () => {
@@ -59,10 +62,7 @@ describe('basic feed operations', () => {
 			timestamp: ts,
 		})
 
-
-		feed.remove(
-			'msg-id-1',
-		)
+		feed.remove('msg-id-1')
 
 		const messages = [...deck()]
 		expect(

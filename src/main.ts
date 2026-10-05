@@ -56,7 +56,13 @@ function listen(channel: string, feed: Feed, statusline: Status): void {
 			switch (msg.command) {
 				case 'PRIVMSG':
 					const msgToHighlight = filterAndProcess(toChatMessage(msg))
-					if (msgToHighlight) feed.show(msgToHighlight)
+					if (msgToHighlight) {
+						try {
+							feed.show(msgToHighlight)
+						} catch (err) {
+							console.error('Error showing message', err)
+						}
+					}
 					break
 				case 'CLEARMSG':
 					const msgIdToDelete = extractTargetMsgId(msg)

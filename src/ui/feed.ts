@@ -1,6 +1,6 @@
 import { Deque } from '../deque'
 import type { ChatMessage } from '../types'
-import { formatTime } from '../utils'
+import { formatTime, isLink, normalizeLink } from '../utils'
 
 export interface FeedOptions {
 	flashIntervalMs: number
@@ -42,7 +42,7 @@ export class Feed {
 				hideAfterMs: undefined,
 				evictTimer: undefined,
 			},
-			0,
+			0
 		)
 	}
 
@@ -162,13 +162,31 @@ export class Feed {
 
 		const body = document.createElement('div')
 		body.className = 'body'
-		body.textContent = msg.text
+		body.append(...this.fromSegments(msg.text.split(' ')))
 
 		const timestamp = document.createElement('div')
 		timestamp.className = 'time'
 		timestamp.textContent = formatTime(msg.timestamp)
 
 		element.append(tab, body, timestamp)
+		return element
+	}
+
+	private fromSegments(segments: string[]): (Node | string)[] {
+		const nodes: (Node | string)[] = []
+		for (let i = 0; i < segments.length; i++) {
+			const segment = segments[i]
+			nodes.push(isLink(segment) ? this.renderLink(segment) : segment)
+
+			if (i < segments.length - 1) nodes.push(' ')
+		}
+		return nodes
+	}
+
+	private renderLink(link: string): HTMLAnchorElement {
+		const element = document.createElement('a')
+		element.href = link
+		element.textContent = normalizeLink(link)
 		return element
 	}
 }
