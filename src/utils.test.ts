@@ -128,4 +128,10 @@ describe('link parsing helper', () => {
 
 		expect(isLink(text)).toBe(true)
 	})
+
+	it('should not detect decimal numbers as links', () => {
+		const text = '2.5mg'
+
+		expect(isLink(text)).toBe(false)
+	})
 })

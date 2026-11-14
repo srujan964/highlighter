@@ -70,8 +70,18 @@ export function isLink(text: string): boolean {
 	try {
 		const url = new URL(normalizeLink(text))
 		const parts = url.hostname.split('.')
+		if (parts.length < 2) {
+			return false
+		}
 
-		return url.protocol === 'https:' && parts.length >= 2 && parts.every(part => part.length > 0)
+		const validParts = parts.every((part) => part.length > 0)
+
+		const tld = parts[parts.length - 1]
+		if (/^[0-9]+/i.test(tld)) {
+			return false
+		}
+
+		return url.protocol === 'https:' && validParts
 	} catch {
 		return false
 	}
