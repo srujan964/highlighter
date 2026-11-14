@@ -46,45 +46,47 @@ export function formatTime(unixTm: number): string {
 }
 
 export function filterAndProcess(msg: ChatMessage): ChatMessage | null {
-	for (const term of FILTER_TERMS) {
-		if (!term) continue
-		if (term !== msg.text && msg.text.startsWith(term)) {
-			const contents = msg.text.replace(term, '')
+	const text = msg.text.trim()
+	const match = FILTER_TERMS.find((term) => text.startsWith(term))
+	if (!match || text === match) {
+		return null
+	}
+	let contents = text.slice(match.length)
 
-			// 'ht:30' is a valid custom timer.
-			// check for min length 3 to account for the space after the timer value.
-			// eg: '30 <text_to_display>'
-			if (term === 'ht:' && !contents.startsWith(' ') && contents.length > 3) {
-				const c = contents.split(' ')
-				const [timer, rest] = [c.shift(), c.join(' ')]
+	// Check for presence of a custom highlight duration for `ht:`
+	// "ht:20 Hello!" is valid, but "ht:20 " is not.
+	if (match === 'ht:' && !contents.startsWith(' ')) {
+		const firstSpace = contents.indexOf(' ')
+		if (firstSpace === -1) return null
+		const [val, rest] = [
+			contents.slice(0, firstSpace),
+			contents.slice(firstSpace + 1),
+		]
 
-				const nonNumeric = Array.from(timer!).some(
-					(c: string) => c.charCodeAt(0) < 48 || c.charCodeAt(0) > 57
-				)
-				if (nonNumeric) return null
+		const nonNumeric = Array.from(val!).some(
+			(c: string) => c.charCodeAt(0) < 48 || c.charCodeAt(0) > 57
+		)
+		if (nonNumeric) return null
 
-				const duration = parseInt(timer!, 10)
-				if (duration < 1 || duration >= 60) {
-					return {
-						...msg,
-						text: rest,
-					}
-				}
-
-				return {
-					...msg,
-					text: rest,
-					durationMs: duration * 1000 * 60,
-				}
-			}
-
+		const duration = parseInt(val!, 10)
+		if (duration < 1 || duration >= 60) {
 			return {
 				...msg,
-				text: contents.trimStart(),
+				text: rest,
 			}
 		}
+
+		return {
+			...msg,
+			text: rest,
+			durationMs: duration * 1000 * 60,
+		}
 	}
-	return null
+
+	return {
+		...msg,
+		text: contents.trimStart(),
+	}
 }
 
 export function extractTargetMsgId(deleteMessage: IRCMessage): string {

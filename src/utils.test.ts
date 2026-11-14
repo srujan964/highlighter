@@ -136,6 +136,17 @@ describe('utils', () => {
 		expect(filterAndProcess(msg)).toBeNull()
 	})
 
+	it('should ignore messages with a customer timer but no text to highlight', () => {
+		const msg: ChatMessage = {
+			name: 'john',
+			color: '#aaaaaa',
+			text: `ht:1245`,
+			timestamp: 0,
+		}
+
+		expect(filterAndProcess(msg)).toBeNull()
+	})
+
 	it('should return the target msg id from a CLEARMSG message', () => {
 		const message: IRCMessage = {
 			tags: {
