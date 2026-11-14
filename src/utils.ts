@@ -57,8 +57,13 @@ export function filterAndProcess(msg: ChatMessage): ChatMessage | null {
 			if (term === 'ht:' && !contents.startsWith(' ') && contents.length > 3) {
 				const c = contents.split(' ')
 				const [timer, rest] = [c.shift(), c.join(' ')]
-				const duration = parseInt(timer!, 10)
 
+				const nonNumeric = Array.from(timer!).some(
+					(c: string) => c.charCodeAt(0) < 48 || c.charCodeAt(0) > 57
+				)
+				if (nonNumeric) return null
+
+				const duration = parseInt(timer!, 10)
 				if (duration < 1 || duration >= 60) {
 					return {
 						...msg,

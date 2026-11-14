@@ -125,6 +125,17 @@ describe('utils', () => {
 		})
 	})
 
+	it('should ignore messages with invalid timer durations', () => {
+		const msg: ChatMessage = {
+			name: 'john',
+			color: '#aaaaaa',
+			text: `ht:why this message has non-numeric characters in the duration parameter.`,
+			timestamp: 0,
+		}
+
+		expect(filterAndProcess(msg)).toBeNull()
+	})
+
 	it('should return the target msg id from a CLEARMSG message', () => {
 		const message: IRCMessage = {
 			tags: {
