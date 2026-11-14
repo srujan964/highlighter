@@ -34,7 +34,7 @@ describe('utils', () => {
 				timestamp: 0,
 			}
 
-			const strippedText = text.replace(term, '')
+			const strippedText = text.replace(term, '').trimStart()
 
 			expect(filterAndProcess(msg)).toMatchObject({
 				name: 'john',
@@ -58,6 +58,72 @@ describe('utils', () => {
 			expect(filterAndProcess(msg)).toBe(null)
 		}
 	)
+
+	it('should extract contents from message highlighted with ht:', () => {
+		const msg: ChatMessage = {
+			name: 'john',
+			color: '#aaaaaa',
+			text: `ht: This is an important message.`,
+			timestamp: 0,
+		}
+
+		expect(filterAndProcess(msg)).toMatchObject({
+			name: 'john',
+			color: '#aaaaaa',
+			text: 'This is an important message.',
+			timestamp: 0,
+		})
+	})
+
+	it('should extract contents from message highlighted with a custom timer', () => {
+		const msg: ChatMessage = {
+			name: 'john',
+			color: '#aaaaaa',
+			text: `ht:20 This is an important message that runs for 20 mins.`,
+			timestamp: 0,
+		}
+
+		expect(filterAndProcess(msg)).toMatchObject({
+			name: 'john',
+			color: '#aaaaaa',
+			text: 'This is an important message that runs for 20 mins.',
+			timestamp: 0,
+			durationMs: 1200000,
+		})
+	})
+
+	it('should extract contents from message highlighted with a single digit custom timer', () => {
+		const msg: ChatMessage = {
+			name: 'john',
+			color: '#aaaaaa',
+			text: `ht:5 This is an important message that runs for 20 mins.`,
+			timestamp: 0,
+		}
+
+		expect(filterAndProcess(msg)).toMatchObject({
+			name: 'john',
+			color: '#aaaaaa',
+			text: 'This is an important message that runs for 20 mins.',
+			timestamp: 0,
+			durationMs: 300000,
+		})
+	})
+
+	it('should extract contents from message highlighted with a custom timer outside allowed range', () => {
+		const msg: ChatMessage = {
+			name: 'john',
+			color: '#aaaaaa',
+			text: `ht:2000 This is an important message configured for a ridiculous duration.`,
+			timestamp: 0,
+		}
+
+		expect(filterAndProcess(msg)).toMatchObject({
+			name: 'john',
+			color: '#aaaaaa',
+			text: 'This is an important message configured for a ridiculous duration.',
+			timestamp: 0,
+		})
+	})
 
 	it('should return the target msg id from a CLEARMSG message', () => {
 		const message: IRCMessage = {
@@ -130,8 +196,12 @@ describe('link parsing helper', () => {
 	})
 
 	it('should not detect decimal numbers as links', () => {
-		const text = '2.5mg'
+		expect(isLink('2.5mg')).toBe(false)
+		expect(isLink('2.32528362')).toBe(false)
+	})
 
-		expect(isLink(text)).toBe(false)
+	it('should not accept raw IPv4 addresses links', () => {
+		expect(isLink('192.168.0.1')).toBe(false)
+		expect(isLink('0.0.0.0')).toBe(false)
 	})
 })

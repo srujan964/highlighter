@@ -49,13 +49,14 @@ export class Feed {
 	/**
 	 * Add new message to the top and flash for `flashIntervalMs`.
 	 */
-	show(msg: ChatMessage): void {
+	highlight(msg: ChatMessage): void {
 		const element = this.render(msg)
+		const hideAfterMs = msg.durationMs ?? this.opts.hideAfterMs
 		this.add(
 			{
 				element,
 				message: msg,
-				hideAfterMs: this.opts.hideAfterMs,
+				hideAfterMs: hideAfterMs,
 				evictTimer: undefined,
 			},
 			this.opts.flashIntervalMs

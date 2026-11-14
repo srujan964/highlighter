@@ -1,6 +1,7 @@
 # Highlighter
 
-A small browser source to highlight messages of importance from Twitch chat. Highlights messages tagged with `!highlight`, `!ht` or `ht: ` from moderators by default.
+A small browser chat dock to highlight messages of importance from Twitch chat. Highlights messages
+tagged with `!highlight`, `!ht` or `ht: ` from moderators by default.
 
 ## Building
 
@@ -14,7 +15,8 @@ The generated file is available under `dist/`.
 
 ## Usage
 
-The HTML file can be served in two ways --- directly as a `file:///` URL or served by a web server as localhost.
+The HTML file can be served in two ways — directly as a `file:///` URL or served by a web
+server as localhost.
 
 The `file:///` URL scheme is the easiest to set up but does not allow for query params, so the configuration needs to be defined in an `.env` file. See [here](#local) for more details.
 
@@ -22,24 +24,48 @@ Create a custom dock in OBS and set the URL as `file:///<path to html file>`.
 
 > Note: If serving via a web-server, set the query params as follows: `?channel=<channel_name>&size=18&feedSize=5&interval=4500&hideAfter=10`.
 
-## Configuration
+### Commands
+
+Messages can be highlighted in 3 ways.
+
+1. `!highlight TEXT`
+2. `!ht TEXT`
+3. `ht:[DURATION] TEXT`
+
+Examples:
+
+> !ht This is an important message.
+
+> !highlight Kappa
+
+> ht: This is another important message.
+
+> ht:5 This message is highlighted for 5 minutes.
+
+A message is kept in the highlight dock for `highAfter` minutes, as configured by the user. 
+
+A custom duration can be set per message using `ht:` with a value between 1 and 60 minutes.
+
+
+### Configuration
 
 The configuration options are:
 
-|Field|Type|Description|
-|-----|---|-----------|
-|channel|string|The channel to listen to|
-|size|number|Font size|
-|feedSize|number|Max messages allowed in the feed|
-|interval|number|Flash animation duration on the latest message in ms|
-|hideAfter|number|How long a message stays in the feed in minutes|
-|isDemo|boolean|Start the dock with some prepopulated messages for testing|
+| Field     | Type    | Description                                                |
+| --------- | ------- | ---------------------------------------------------------- |
+| channel   | string  | The channel to listen to                                   |
+| size      | number  | Font size                                                  |
+| feedSize  | number  | Max messages allowed in the feed                           |
+| interval  | number  | Flash animation duration on the latest message in ms       |
+| hideAfter | number  | How long a message stays in the feed in minutes            |
+| isDemo    | boolean | Start the dock with some prepopulated messages for testing |
 
-### Local 
+### Local
 
 Vite lets you define variables in an `.env` file and bakes it into the bundled HTML at build time.
 
 Create a `.env.local` and define the following:
+
 ```env
 VITE_CHANNEL=test
 VITE_FEED_SIZE=5

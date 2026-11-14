@@ -25,7 +25,7 @@ describe('basic feed operations', () => {
 			flashIntervalMs: 10000,
 		})
 
-		feed.show({
+		feed.highlight({
 			id: 'msg-id',
 			name: 'john',
 			color: '#9857d4',
@@ -40,6 +40,33 @@ describe('basic feed operations', () => {
 		expect(root.querySelector('.time')).toBeTruthy()
 	})
 
+	it('should use provided duration from the message', () => {
+		const feed = new Feed(root, {
+			maxMessages: 5,
+			hideAfterMs: 10000,
+			flashIntervalMs: 10000,
+		})
+
+		feed.highlight({
+			id: 'msg-id',
+			name: 'john',
+			color: '#9857d4',
+			text: 'VoHiYo https://www.example.com',
+			timestamp: ts,
+			durationMs: 500,
+		})
+
+		expect(root.querySelector('.tab')?.textContent).toBe('john')
+		expect(root.querySelector('.body')?.textContent).toBe(
+			'VoHiYo https://www.example.com'
+		)
+		expect(root.querySelector('.time')).toBeTruthy()
+
+		vi.advanceTimersByTime(1000)
+
+		expect(deck().length).toBe(0)
+	})
+
 	it('should remove existing message from the back', () => {
 		const feed = new Feed(root, {
 			maxMessages: 5,
@@ -47,14 +74,14 @@ describe('basic feed operations', () => {
 			flashIntervalMs: 10000,
 		})
 
-		feed.show({
+		feed.highlight({
 			id: 'msg-id-1',
 			name: 'john',
 			color: '#9857d4',
 			text: 'VoHiYo',
 			timestamp: ts,
 		})
-		feed.show({
+		feed.highlight({
 			id: 'msg-id-2',
 			name: 'jane',
 			color: '#9857d4',
@@ -77,49 +104,49 @@ describe('basic feed operations', () => {
 			flashIntervalMs: 10000,
 		})
 
-		feed.show({
+		feed.highlight({
 			id: 'msg-id-1',
 			name: 'john',
 			color: '#9857d4',
 			text: 'VoHiYo',
 			timestamp: ts,
 		})
-		feed.show({
+		feed.highlight({
 			id: 'msg-id-2',
 			name: 'jane',
 			color: '#9857d4',
 			text: 'Kappa',
 			timestamp: ts,
 		})
-		feed.show({
+		feed.highlight({
 			id: 'msg-id-3',
 			name: 'alice',
 			color: '#9857d4',
 			text: 'HeyGuys',
 			timestamp: ts,
 		})
-		feed.show({
+		feed.highlight({
 			id: 'msg-id-4',
 			name: 'bob',
 			color: '#9857d4',
 			text: 'MrDestructoid',
 			timestamp: ts,
 		})
-		feed.show({
+		feed.highlight({
 			id: 'msg-id-5',
 			name: 'charlie',
 			color: '#9857d4',
 			text: 'PersonalBest',
 			timestamp: ts,
 		})
-		feed.show({
+		feed.highlight({
 			id: 'msg-id-6',
 			name: 'enid',
 			color: '#9857d4',
 			text: 'FallDamage',
 			timestamp: ts,
 		})
-		feed.show({
+		feed.highlight({
 			id: 'msg-id-7',
 			name: 'fred',
 			color: '#9857d4',
@@ -142,28 +169,28 @@ describe('basic feed operations', () => {
 			flashIntervalMs: 10000,
 		})
 
-		feed.show({
+		feed.highlight({
 			id: 'msg-id-1',
 			name: 'john',
 			color: '#9857d4',
 			text: 'VoHiYo',
 			timestamp: ts,
 		})
-		feed.show({
+		feed.highlight({
 			id: 'msg-id-2',
 			name: 'jane',
 			color: '#9857d4',
 			text: 'Kappa',
 			timestamp: ts,
 		})
-		feed.show({
+		feed.highlight({
 			id: 'msg-id-3',
 			name: 'alice',
 			color: '#9857d4',
 			text: 'HeyGuys',
 			timestamp: ts,
 		})
-		feed.show({
+		feed.highlight({
 			id: 'msg-id-4',
 			name: 'bob',
 			color: '#9857d4',

@@ -48,11 +48,36 @@ export function formatTime(unixTm: number): string {
 export function filterAndProcess(msg: ChatMessage): ChatMessage | null {
 	for (const term of FILTER_TERMS) {
 		if (!term) continue
-		if (term !== msg.text && msg.text.startsWith(term))
+		if (term !== msg.text && msg.text.startsWith(term)) {
+			const contents = msg.text.replace(term, '')
+
+			// 'ht:30' is a valid custom timer.
+			// check for min length 3 to account for the space after the timer value.
+			// eg: '30 <text_to_display>'
+			if (term === 'ht:' && !contents.startsWith(' ') && contents.length > 3) {
+				const c = contents.split(' ')
+				const [timer, rest] = [c.shift(), c.join(' ')]
+				const duration = parseInt(timer!, 10)
+
+				if (duration < 1 || duration >= 60) {
+					return {
+						...msg,
+						text: rest,
+					}
+				}
+
+				return {
+					...msg,
+					text: rest,
+					durationMs: duration * 1000 * 60,
+				}
+			}
+
 			return {
 				...msg,
-				text: msg.text.replace(term, ''),
+				text: contents.trimStart(),
 			}
+		}
 	}
 	return null
 }

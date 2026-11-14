@@ -55,10 +55,10 @@ function listen(channel: string, feed: Feed, statusline: Status): void {
 		onEvent: (msg) => {
 			switch (msg.command) {
 				case 'PRIVMSG':
-					const msgToHighlight = filterAndProcess(toChatMessage(msg))
-					if (msgToHighlight) {
+					const chatMsg = filterAndProcess(toChatMessage(msg))
+					if (chatMsg) {
 						try {
-							feed.show(msgToHighlight)
+							feed.highlight(chatMsg)
 						} catch (err) {
 							console.error('Error showing message', err)
 						}

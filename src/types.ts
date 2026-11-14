@@ -13,6 +13,7 @@ export interface ChatMessage {
 	color: string
 	text: string
 	timestamp: number
+	durationMs?: number
 }
 
 export type Tag = Readonly<Record<string, string>>
