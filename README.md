@@ -42,7 +42,7 @@ Examples:
 
 > ht:5 This message is highlighted for 5 minutes.
 
-A message is kept in the highlight dock for `highAfter` minutes, as configured by the user. 
+A message is kept in the highlight dock for `hideAfter` minutes, as configured by the user. 
 
 A custom duration can be set per message using `ht:` with a value between 1 and 60 minutes.
 
